@@ -1,11 +1,11 @@
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.serializers import HyperlinkedModelSerializer
+from rest_framework.serializers import HyperlinkedModelSerializer, ModelSerializer
 
 from jobs.models import Job
 
 
-class JobSerializer(HyperlinkedModelSerializer):
+class JobSerializer(ModelSerializer):
     class Meta:
         model = Job
         fields = [
