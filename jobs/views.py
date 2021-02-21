@@ -22,11 +22,8 @@ class JobSerializer(HyperlinkedModelSerializer):
 
 class JobViewSet(ReadOnlyModelViewSet):
     """
-    Returns a list of jobs for the current user.
+    Returns a list of all jobs in the system.
     """
     queryset = Job.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = JobSerializer
-
-    def get_queryset(self):
-        return self.queryset.all()
