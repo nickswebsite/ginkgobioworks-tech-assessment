@@ -37,7 +37,7 @@ class JobModelTests(TestCase):
         self.assertAlmostEqual(job.created_on, timezone.now(), delta=timedelta(seconds=1))
 
 
-class JobViewsTest(APITestCase, URLPatternsTestCase):
+class JobsApiTests(APITestCase, URLPatternsTestCase):
     urlpatterns = [
         path('', include(urls))
     ]
