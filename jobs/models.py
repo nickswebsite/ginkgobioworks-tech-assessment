@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class JobState(models.TextChoices):
@@ -29,6 +30,13 @@ class Job(models.Model):
 
     def begin(self):
         self.state = JobState.IN_PROGRESS
+
+    def complete(self, successful=True):
+        if successful:
+            self.state = JobState.SUCCESSFUL
+        else:
+            self.state = JobState.FAILED
+        self.ended_on = timezone.now()
 
     @property
     def pending(self):
