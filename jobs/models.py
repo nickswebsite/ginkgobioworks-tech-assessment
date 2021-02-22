@@ -10,9 +10,10 @@ class JobState(models.TextChoices):
 
 
 class JobManager(models.Manager):
-    def create_job(self, total=10) -> "Job":
+    def create_job(self, total=10, **kwargs) -> "Job":
         return self.create(
-            total=total
+            total=total,
+            **kwargs
         )
 
 
