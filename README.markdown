@@ -27,7 +27,7 @@ to a background service using Celery.
 
 The project will contain the following apps:
 
-* `jobs` - Keeps track of job status.
+* `jobs` - Keeps track of job status. (Note that `jobs` will be extracted out into its own PyPI package.)
 * `protein_search` - Provides functionality to search for a protein with a given DNA sequence.
 * `conf` - Any configurations and settings will be located in a `conf` app.
 * `ui` - Serves the end ui.
