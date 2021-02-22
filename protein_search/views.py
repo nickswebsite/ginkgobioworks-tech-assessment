@@ -1,3 +1,5 @@
+import logging
+
 from django.urls import reverse
 from rest_framework.decorators import action
 from rest_framework.relations import HyperlinkedIdentityField
@@ -8,27 +10,20 @@ from rest_framework.serializers import HyperlinkedModelSerializer, Serializer, C
 
 from protein_search.models import ProteinSearchJob
 from protein_search.validators import DnaValidator
-from protein_search.search import search
+from protein_search.tasks import search_task
+
+log = logging.getLogger(__name__)
 
 
 def start_search(sequence, owner) -> ProteinSearchJob:
     job = ProteinSearchJob.objects.create_protein_search_job(sequence, owner)
 
-    job.job.begin()
-    result = search(sequence)
-    if result:
-        job.job.complete()
-        job.protein_id = result.protein_id
-        job.record_found = result.record_found
-        job.record_source = result.record_source
-        job.record_description = result.record_description
-        job.location_start = result.location.start
-        job.location_end = result.location.end
-    else:
-        job.job.complete(False)
+    log.info(f"Delegating protein search {job.pk} for sequence {sequence} started by {owner}")
 
-    job.save()
-    job.job.save()
+    result = search_task.apply_async((sequence, job.pk), ignore_result=True)
+    result.forget()
+
+    log.info(f"Search job {job.pk} for sequence {sequence} started by {owner} dispatched.")
 
     return job
 
@@ -83,3 +78,8 @@ class ProteinSearchJobViewSet(ReadOnlyModelViewSet):
             })
         else:
             return Response(serializer.errors, status=400)
+
+    def get_serializer_class(self):
+        if self.action == "start":
+            return ProteinSearchJobSubmissionSerializer
+        return super().get_serializer_class()

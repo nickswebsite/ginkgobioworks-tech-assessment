@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -124,6 +125,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Celery
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 10
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True
+CELERY_BROKER_URL = "memory://"
 
 try:
     from local_settings import *
