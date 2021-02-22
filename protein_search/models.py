@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from jobs.models import Job
-from protein_search.validators import DnaValidator
 
 UserModel = get_user_model()
 
@@ -20,7 +19,7 @@ class ProteinSearchJob(models.Model):
     objects = ProteinSearchJobManager()
 
     owner = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name="protein_searches")
-    sequence = models.TextField(blank=False, validators=[DnaValidator()])
+    sequence = models.TextField(blank=False)
     job = models.OneToOneField(Job, models.CASCADE, related_name="protein_searches")
     record_found = models.CharField(max_length=1024, blank=True, default="")
     record_description = models.TextField(blank=True, default="")
