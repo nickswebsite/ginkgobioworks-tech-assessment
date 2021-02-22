@@ -16,14 +16,19 @@ def start_search(sequence, owner) -> ProteinSearchJob:
 
     job.job.begin()
     result = search(sequence)
-    job.job.complete()
-    job.protein_id = result.protein_id
-    job.record_found = result.record_found
-    job.record_source = result.record_source
-    job.record_description = result.record_description
-    job.location_start = result.location.start
-    job.location_end = result.location.end
+    if result:
+        job.job.complete()
+        job.protein_id = result.protein_id
+        job.record_found = result.record_found
+        job.record_source = result.record_source
+        job.record_description = result.record_description
+        job.location_start = result.location.start
+        job.location_end = result.location.end
+    else:
+        job.job.complete(False)
+
     job.save()
+    job.job.save()
 
     return job
 

@@ -20,7 +20,7 @@ class ProteinSearchJobModelTests(TestCase):
 
         user = create_user()
 
-        protein_search_job = ProteinSearchJob.objects.create_protein_search_job("catttctatc", user)
+        protein_search_job = ProteinSearchJob.objects.create_protein_search_job(sequence, user)
 
         self.assertEqual(protein_search_job.sequence, sequence.upper())
 
@@ -38,6 +38,10 @@ class ProteinSearchJobApiTests (APITestCase, URLPatternsTestCase):
         # We need to include jobs.urls to so that the job url can be looked up when serializing search payloads.
         path('jobs', include(jobs.urls)),
     ]
+
+    # CATTTCTATC should be found in NC_007346
+    fixture_sequence = "CATTTCTATC"
+    fixtures = ["NC_007346.json"]
 
     def setUp(self) -> None:
         self.user = create_user()
@@ -83,13 +87,11 @@ class ProteinSearchJobApiTests (APITestCase, URLPatternsTestCase):
         self.assertEqual(job.owner, self.user)
 
     def test_post_sequence_returns_the_proper_response(self):
-        sequence = "CAT"
-
-        response = self.post_sequence(sequence)
+        response = self.post_sequence(self.fixture_sequence)
 
         self.assertEqual(response.status_code, 202)
 
-        self.assertEqual(response.data["sequence"], sequence)
+        self.assertEqual(response.data["sequence"], self.fixture_sequence)
 
         job = ProteinSearchJob.objects.all()[0]
         self.assertEqual(response.data["job"]["state"], job.job.state)
