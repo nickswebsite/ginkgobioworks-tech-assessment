@@ -7,7 +7,7 @@ from jobs.models import Job
 
 
 class JobSerializer(HyperlinkedModelSerializer):
-    url = HyperlinkedIdentityField(view_name="jobs-detail")
+    url = HyperlinkedIdentityField(view_name="job-detail")
 
     class Meta:
         model = Job
