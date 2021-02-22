@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.urls import include, reverse, path
 from rest_framework.test import APITestCase, URLPatternsTestCase
 
+import jobs.urls
 from protein_search import urls
 from protein_search.models import ProteinSearchJob
 
@@ -33,7 +34,9 @@ class ProteinSearchJobModelTests(TestCase):
 
 class ProteinSearchJobApiTests (APITestCase, URLPatternsTestCase):
     urlpatterns = [
-        path('', include(urls)),
+        path('searches', include(urls)),
+        # We need to include jobs.urls to so that the job url can be looked up when serializing search payloads.
+        path('jobs', include(jobs.urls)),
     ]
 
     def setUp(self) -> None:

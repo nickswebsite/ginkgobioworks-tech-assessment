@@ -1,9 +1,10 @@
 from django.urls import reverse
 from rest_framework.decorators import action
+from rest_framework.relations import HyperlinkedIdentityField
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.serializers import ModelSerializer, Serializer, CharField
+from rest_framework.serializers import HyperlinkedModelSerializer, Serializer, CharField
 
 from protein_search.models import ProteinSearchJob
 from protein_search.validators import DnaValidator
@@ -14,11 +15,20 @@ def start_search(sequence, owner) -> ProteinSearchJob:
     return job
 
 
-class ProteinSearchJobSerializer(ModelSerializer):
+class ProteinSearchJobSerializer(HyperlinkedModelSerializer):
+    url = HyperlinkedIdentityField(view_name="protein_search-detail")
+
     class Meta:
         model = ProteinSearchJob
         fields = [
+            "url",
             "sequence",
+            "protein_id",
+            "record_found",
+            "record_source",
+            "record_description",
+            "location_start",
+            "location_end",
             "job",
         ]
         depth = 2
