@@ -1,0 +1,11 @@
+role: ${ role }
+
+public_dns: ${ public_dns }
+
+database_host: ${ database_host }
+database_name: ${ database_name }
+database_user: ${ database_user }
+database_password: ${ database_password }
+
+private_key: ${ private_key }
+certificate: ${ certificate }
