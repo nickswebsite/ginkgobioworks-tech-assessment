@@ -31,3 +31,11 @@ class ProteinSearchJob(models.Model):
 
     def __str__(self):
         return f"{self.owner.username} - {self.sequence}"
+
+
+class ProteinDatabaseEntry(models.Model):
+    identifier = models.CharField(max_length=1024)
+    content = models.TextField()
+
+    def __str__(self):
+        return self.identifier
