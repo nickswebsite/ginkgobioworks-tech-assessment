@@ -8,10 +8,23 @@ from rest_framework.serializers import HyperlinkedModelSerializer, Serializer, C
 
 from protein_search.models import ProteinSearchJob
 from protein_search.validators import DnaValidator
+from protein_search.search import search
 
 
 def start_search(sequence, owner) -> ProteinSearchJob:
     job = ProteinSearchJob.objects.create_protein_search_job(sequence, owner)
+
+    job.job.begin()
+    result = search(sequence)
+    job.job.complete()
+    job.protein_id = result.protein_id
+    job.record_found = result.record_found
+    job.record_source = result.record_source
+    job.record_description = result.record_description
+    job.location_start = result.location.start
+    job.location_end = result.location.end
+    job.save()
+
     return job
 
 
