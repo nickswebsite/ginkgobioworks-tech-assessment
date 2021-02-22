@@ -12,7 +12,7 @@ class ProteinSearchJobManager(models.Manager):
         return self.create(
             sequence=sequence.upper(),
             owner=owner,
-            job=Job.objects.create_job(10),
+            job=Job.objects.create_job(10, description=f"protein search job for {owner}"),
         )
 
 
