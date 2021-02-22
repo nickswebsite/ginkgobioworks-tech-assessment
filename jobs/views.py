@@ -1,11 +1,14 @@
+from rest_framework.relations import HyperlinkedIdentityField
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.serializers import HyperlinkedModelSerializer, ModelSerializer
+from rest_framework.serializers import HyperlinkedModelSerializer
 
 from jobs.models import Job
 
 
-class JobSerializer(ModelSerializer):
+class JobSerializer(HyperlinkedModelSerializer):
+    url = HyperlinkedIdentityField(view_name="jobs-detail")
+
     class Meta:
         model = Job
         fields = [
