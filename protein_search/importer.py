@@ -1,12 +1,20 @@
 import contextlib
+from typing import List
 
 from Bio import Entrez, SeqIO
+from Bio.SeqRecord import SeqRecord
 from django.conf import settings
 
 from protein_search.models import ProteinDatabaseEntry
 
 
-def fetch_entries(identifiers):
+def fetch_entries(identifiers: List[str]) -> List[SeqRecord]:
+    """
+    Fetches the GenBank nucleotide database for the given identifiers.
+
+    :param identifiers: List of identifiers.
+    :return: Returns a list of sequence records.
+    """
     Entrez.tool = "MyTestingEntrezTool"
     Entrez.email = settings.ENTREZ_EMAIL
     with contextlib.closing(Entrez.efetch(db="nucleotide", id=",".join(identifiers), rettype="gb", retmode="text")) as handle:
@@ -15,7 +23,13 @@ def fetch_entries(identifiers):
     return records
 
 
-def import_identifiers(identifiers):
+def import_sequences(identifiers: List[str]):
+    """
+    Imports sequence records with the given identifiers from the
+    GenBank nucleotide database.
+
+    :param identifiers: List of identifiers.
+    """
     records = fetch_entries(identifiers)
 
     for record in records:

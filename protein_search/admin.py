@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseNotAllowed
 from django.template.response import TemplateResponse
 from django.urls import path
 
-from protein_search.importer import import_identifiers
+from protein_search.importer import import_sequences
 from protein_search.models import ProteinSearchJob, ProteinDatabaseEntry
 
 
@@ -26,11 +26,9 @@ class ProteinDatabaseEntryModelAdmin(admin.ModelAdmin):
             form = ImportProteinDatabaseEntryForm(request.POST)
             if form.is_valid():
                 identifiers_str = form.cleaned_data["identifiers"]
-                identifiers = [
-                    i.strip() for i in identifiers_str.strip().split() if i.strip()
-                ]
+                identifiers = identifiers_str.split()
 
-                import_identifiers(identifiers)
+                import_sequences(identifiers)
 
                 return HttpResponse(f"Import running for the given identifiers: {identifiers}")
             else:
