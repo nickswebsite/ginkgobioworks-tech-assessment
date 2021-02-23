@@ -50,6 +50,14 @@ will be automated using Ansible scripts.
 Development
 ===========
 
+Install OS Dependencies:
+
+    apt-get install libmysqlclient libmysqlclient-dev
+
+or on Mac
+
+    brew install mysql-client
+
 Install dependencies:
 
     pip install -r requirements.txt -U

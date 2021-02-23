@@ -33,7 +33,7 @@ class Command(BaseCommand):
         parser.add_argument("--local-settings", type=str, help=f"path to local settings file. Defaults to `{LOCAL_SETTINGS_PATH}`.")
 
     def handle(self, *args, **options):
-        local_settings_path = options.get("local_settings", LOCAL_SETTINGS_PATH)
+        local_settings_path = options.get("local_settings") or LOCAL_SETTINGS_PATH
 
         config = self._get_dev_environment_config(self.local_settings_prompts)
 

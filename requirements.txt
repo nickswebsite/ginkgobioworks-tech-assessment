@@ -3,6 +3,6 @@ celery==5.0.5
 Django==3.1.7
 django-celery-results==2.0.1
 djangorestframework==3.12.2
-mysqlclient==1.4.6
+mysqlclient==2.0.3
 
 redis==3.5.3
