@@ -23,9 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'ou-42ug+%b%4)ku3@@xb^mp(-5vopo=5x%glh9^7ewr_m^suda'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "www.ginkgo-bioworks.11x.engineering",
+    "www.local.11x.engineering",
+]
 
 
 # Application definition
@@ -124,6 +127,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/app/static'
 
 # Celery
 CELERY_TASK_TRACK_STARTED = True
