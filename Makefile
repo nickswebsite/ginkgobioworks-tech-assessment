@@ -3,13 +3,14 @@ IMAGE_NAME := docker.11x.engineering/ginkgo-bioworks-tech-assessment:latest
 PYTHON := .v/bin/python
 
 # Paths to TLS certificates for your local dev machine.
-TLS_PRIVATE_KEY := $(shell pwd)/deployment/key.local.pem
-TLS_CERTIFICATE_CHAIN := $(shell pwd)/deployment/chain.local.pem
+TLS_PRIVATE_KEY := $(shell pwd)/infrastructure/key.local.pem
+TLS_CERTIFICATE_CHAIN := $(shell pwd)/infrastructure/chain.local.pem
 
 DEV_KEY_VOLUME_MAPPING := ${TLS_PRIVATE_KEY}:/srv/certificates/key.pem
 DEV_CHAIN_VOLUME_MAPPING := ${TLS_CERTIFICATE_CHAIN}:/srv/certificates/crt.pem
-DEV_DATABASE_VOLUME_MAPPING := -v $$(pwd)/db.sqlite3:/app/db.sqlite3
+
 DEV_TLS_VOLUME_MAPPINGS := -v ${DEV_KEY_VOLUME_MAPPING} -v ${DEV_CHAIN_VOLUME_MAPPING}
+DEV_DATABASE_VOLUME_MAPPING := -v $$(pwd)/db.sqlite3:/app/db.sqlite3
 DEV_MEDIA_VOLUME_MAPPING := -v $$(pwd)/media:/srv/media
 
 
