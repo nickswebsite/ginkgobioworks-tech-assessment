@@ -1,4 +1,5 @@
 import os
+import sys
 import threading
 
 from celery import Celery
@@ -18,5 +19,5 @@ def start_memory_broker():
     thread.start()
 
 
-if app.conf.broker_url.startswith("memory://"):
+if app.conf.broker_url.startswith("memory://") and "test" not in sys.argv:
     start_memory_broker()
