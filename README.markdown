@@ -72,6 +72,7 @@ Make sure the tests run pass. To run the tests:
 
 To run a local development server:
 
+    python manage.py migrate
     python manage.py runserver [PORT_NUMBER]
 
 Note that an in memory celery worker will be spun up when running the development server.
