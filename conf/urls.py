@@ -19,11 +19,13 @@ from django.urls import path, include
 
 import jobs.urls
 import protein_search.urls
+from frontend.views import index
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login', LoginView.as_view(template_name="admin/login.html")),
     path('logout', LogoutView.as_view()),
+    path('', index, name="index"),
     path('', include(protein_search.urls)),
     path('', include(jobs.urls)),
 ]
