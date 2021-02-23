@@ -24,6 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login', LoginView.as_view(template_name="admin/login.html")),
     path('logout', LogoutView.as_view()),
+    path('', include(protein_search.urls)),
     path('', include(jobs.urls)),
-    path('', include(protein_search.urls))
 ]
