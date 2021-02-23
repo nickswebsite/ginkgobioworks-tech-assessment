@@ -25,7 +25,7 @@ class ProteinSearchJobModelTests(TestCase):
         self.assertEqual(protein_search_job.sequence, sequence.upper())
 
     def test_create_protein_search_job_assigns_the_proper_owner(self):
-        user = UserModel.objects.create_user()
+        user = create_user()
 
         protein_search_job = ProteinSearchJob.objects.create_protein_search_job("catttctatc", user)
 
