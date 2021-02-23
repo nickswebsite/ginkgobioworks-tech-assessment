@@ -21,8 +21,8 @@ resource "aws_db_instance" "database" {
   engine_version = "5.7"
   instance_class = "db.t2.micro"
   name = "ginkgobioworks"
-  username = "ginkgobioworks"
-  password = "ginkgobioworks"
+  username = var.database_user
+  password = var.database_password
   parameter_group_name = "default.mysql5.7"
   db_subnet_group_name = aws_db_subnet_group.db_subnet_group.name
   vpc_security_group_ids = [

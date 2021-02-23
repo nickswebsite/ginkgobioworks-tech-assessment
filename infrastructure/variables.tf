@@ -1,6 +1,8 @@
 variable "ami" {}
 variable "application" {}
 variable "database_deletion_protection" {}
+variable "database_password" {}
+variable "database_user" {}
 variable "fqdn" {}
 variable "instance_type" {}
 variable "key_name" {}

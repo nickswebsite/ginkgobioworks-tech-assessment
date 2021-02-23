@@ -1,6 +1,10 @@
 # ################################################################################################################### #
-#  Copy this file to local.tfvars and fill in the information needed to spin up an EC2 instance.
+#  Copy this file to local.auto.tfvars and fill in the information needed to spin up an EC2 instance.
 # ################################################################################################################### #
+
+# Database credentials
+database_user = "{{ database_user }}"
+database_password = "{{ database_password }}"
 
 # The fully qualified domain name of the instance the system will be deployed to.
 fqdn = "{{ fqdn }}"
