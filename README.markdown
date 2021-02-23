@@ -87,28 +87,6 @@ To build a deployable package.
 
     make image
 
-### Production Like Environment ###
-
-If you want a more 'production like' environment running on your local machine, you will
-need to create TLS certificates for your local environment and copy them to:
-
-* `infrastructure/chain.local.pem`
-* `infrastructure/key.local.pem`
-
-Update server names `nginx.conf` to use the host name for your local machine.
-
-<small>(TODO remove hard coded host names in nginx.conf)</small>
-
-Spin up related services:
-
-    docker-compose up -f docker-compose.dev.yml
-
-Build and run the docker image from local sources:
-
-    make quick
-
-Note that you will need to have permissions to open ports 80 and 443.
-
 
 Contributing
 ============
