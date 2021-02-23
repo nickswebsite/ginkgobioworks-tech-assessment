@@ -25,7 +25,7 @@ class ProteinSearchJobModelTests(TestCase):
         self.assertEqual(protein_search_job.sequence, sequence.upper())
 
     def test_create_protein_search_job_assigns_the_proper_owner(self):
-        user = UserModel.objects.create_user("user", "user@example.com", "password")
+        user = UserModel.objects.create_user()
 
         protein_search_job = ProteinSearchJob.objects.create_protein_search_job("catttctatc", user)
 
@@ -46,6 +46,13 @@ class ProteinSearchJobApiTests (APITestCase, URLPatternsTestCase):
     def setUp(self) -> None:
         self.user = create_user()
         self.client.force_login(self.user)
+
+    def test_get_jobs_returns_forbidden_if_the_user_is_not_logged_in(self):
+        self.client.logout()
+
+        res = self.get_list()
+
+        self.assertEqual(res.status_code, 403)
 
     def test_get_jobs_returns_an_empty_list_if_there_are_no_jobs(self):
         res = self.get_list()

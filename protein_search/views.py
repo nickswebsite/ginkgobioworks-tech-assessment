@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.relations import HyperlinkedIdentityField
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.serializers import HyperlinkedModelSerializer, Serializer, CharField
 
 from protein_search.models import ProteinSearchJob
@@ -56,7 +56,7 @@ class ProteinSearchJobViewSet(ReadOnlyModelViewSet):
     Returns a list of protein search jobs that the user has run.
     """
     queryset = ProteinSearchJob.objects.all()
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     serializer_class = ProteinSearchJobSerializer
 
     def get_queryset(self):
