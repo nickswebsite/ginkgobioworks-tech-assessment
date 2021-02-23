@@ -77,7 +77,7 @@ To run a local development server:
 
 Note that an in memory celery worker will be spun up when running the development server.
 
-To import a dataset from Entrez visit:
+To import a dataset using Entrez visit:
 
     http://localhost:[PORT_NUMBER]/admin/protein_search/proteindatabaseentry/import-protein-database-entry
 
