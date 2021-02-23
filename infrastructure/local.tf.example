@@ -1,0 +1,53 @@
+# ################################################################################################################### #
+#  Copy this file to local.tf and set up your backend and write certificate files as needed.
+# ################################################################################################################### #
+
+terraform {
+  backend "pg" {
+    conn_str = "{{ state_connection_string }}"
+    schema_name = "{{ schema_name }}"
+  }
+}
+
+
+data "terraform_remote_state" "certs" {
+  backend = "pg"
+  config = {
+    conn_str = "certs_backend_connection_string"
+    schema_name = "certs_schema_name"
+  }
+}
+
+
+provider "aws" {
+  profile = "{{ aws_profile }}"
+  region = "us-east-1"
+}
+
+
+resource "local_file" "local_tls_chain" {
+  filename = "chain.local.pem"
+  content = data.terraform_remote_state.certs.outputs.local_11x_engineering.chain
+  file_permission = "0600"
+}
+
+
+resource "local_file" "local_tls_key" {
+  filename = "key.local.pem"
+  sensitive_content = data.terraform_remote_state.certs.outputs.local_11x_engineering.key
+  file_permission = "0600"
+}
+
+
+resource "local_file" "ginkgo_tls_chain" {
+  filename = "ginkgo-bioworks-tech-assessment.chain.pem"
+  content = data.terraform_remote_state.certs.outputs.ginkgo_bioworks_11x_engineering.chain
+  file_permission = "0600"
+}
+
+
+resource "local_file" "ginkgo_tls_key" {
+  filename = "ginkgo-bioworks-tech-assessment.key.pem"
+  sensitive_content = data.terraform_remote_state.certs.outputs.ginkgo_bioworks_11x_engineering.key
+  file_permission = "0600"
+}

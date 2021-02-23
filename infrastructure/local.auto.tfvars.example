@@ -1,0 +1,22 @@
+# ################################################################################################################### #
+#  Copy this file to local.tfvars and fill in the information needed to spin up an EC2 instance.
+# ################################################################################################################### #
+
+# The fully qualified domain name of the instance the system will be deployed to.
+fqdn = "{{ fqdn }}"
+
+# The ssh key to use for the provisioned instance.
+key_name = "{{ key_name }}"
+
+# The IP address to allow ssh access from.
+operations_ip_address = "{{ operations_ip_address }}"
+
+# The path to the private key to use for the provisioned instance.
+ssh_key_path = "{{ private_key_path }}"
+
+# The id of the Route53 hosted zone to add records to.
+zone_id = "{{ zone_id }}"
+
+# Paths to TLS keys.
+tls_private_key = "{{ path to private key }}.key.pem"
+tls_certificate_chain = "{{ path to certificate chain }}.chain.pem"
