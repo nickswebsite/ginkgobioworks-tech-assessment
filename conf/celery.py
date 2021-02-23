@@ -19,5 +19,5 @@ def start_memory_broker():
     thread.start()
 
 
-if app.conf.broker_url.startswith("memory://") and "test" not in sys.argv:
+if app.conf.broker_url.startswith("memory://") and "runserver" in sys.argv:
     start_memory_broker()
