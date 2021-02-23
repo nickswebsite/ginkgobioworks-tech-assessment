@@ -1,6 +1,7 @@
 /local_settings.py
 local.tf
 local.auto.tfvars
+*.local.yml
 
 infrastructure/inventory
 infrastructure/ansible-variables.yml
@@ -21,4 +22,5 @@ __pycache__/
 backups/
 dist/
 tmp/
+local/
 .*/

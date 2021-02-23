@@ -1,0 +1,39 @@
+version: '3.3'
+services:
+    redis:
+        container_name: redis
+        image: redis:alpine
+
+    web:
+        container_name: web
+        depends_on:
+        - redis
+        image: {{ image_name }}
+        ports:
+        - 443:443
+        - 80:80
+        links:
+        - redis:redis
+        volumes:
+        - type: bind
+          source: ./certificates
+          target: /srv/certificates
+        - type: bind
+          source: ./local_settings.py
+          target: /app/local_settings.py
+        - type: bind
+          source: ./media
+          target: /srv/media
+
+    celery:
+      container_name: celery
+      depends_on:
+      - redis
+      image: {{ image_name }}
+      command: celery -A conf worker -l INFO
+      links:
+      - redis:redis
+      volumes:
+      - type: bind
+        source: ./local_settings.py
+        target: /app/local_settings.py

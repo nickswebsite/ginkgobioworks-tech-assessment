@@ -1,0 +1,28 @@
+- apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  name: Adding Docker Apt key
+
+- apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+    filename: docker
+  name: Adding docker Apt repositlry
+
+- package:
+    name: docker-ce
+    state: present
+  name: Installing Docker
+
+- package:
+    name: docker-compose
+    state: present
+  name: Installing Docker Compose
+
+- package:
+    name: iotop
+    state: present
+
+- package:
+    name: jq
+    state: present

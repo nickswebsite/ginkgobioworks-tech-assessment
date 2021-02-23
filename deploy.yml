@@ -1,0 +1,73 @@
+- hosts: ginkgobioworks-tech-assessment
+  user: ubuntu
+  become: yes
+  vars:
+    image_name: docker.11x.engineering/ginkgo-bioworks-tech-assessment:latest
+    container_name: gingko-bioworks.11x.engineering
+    media_dir: /srv/media
+    docker_tarball: ginkgo-bioworks-tech-assessment.docker.tar
+
+  vars_files:
+  - '{{ variables }}'
+  - infrastructure/ansible-variables.local.yml
+
+  tasks:
+  - include_tasks: deployment/install_docker.yml
+
+  - file:
+      path: '{{ media_dir }}'
+      state: directory
+
+  - file:
+      path: /srv/certificates
+      state: directory
+
+  - command: docker volume prune -f
+    name: Removing old volumes.
+
+  - command: docker image prune -f
+    name: Removing old images.
+
+  - copy:
+      src: dist/{{ docker_tarball }}
+      dest: /srv/gingko-bioworks.11x.engineering.docker.tar
+    name: Uploading docker image.
+
+  - copy:
+      src: '{{ private_key }}'
+      dest: /srv/certificates/key.pem
+    name: Uploading server private key.
+
+  - copy:
+      src: '{{ certificate }}'
+      dest: /srv/certificates/crt.pem
+    name: Uploading server certificate chain.
+
+  - template:
+      src: deployment/local_settings.tmpl.py
+      dest: /srv/local_settings.py
+    name: Uploading local_settings.py
+
+  - template:
+      src: docker-compose.yml
+      dest: /srv/docker-compose.yml
+    name: Uploading docker-compose.yml
+
+  - command: docker load --input /srv/gingko-bioworks.11x.engineering.docker.tar
+    name: Importing docker image.
+
+  # Note to remove `web` first to prevent new jobs from being added to the job queue and allow celery to finish processing its queue.
+  - command: docker-compose rm -fsv web celery
+    args:
+      chdir: /srv
+    name: Remove ephemeral containers (web, celery).
+
+  - command: docker-compose up -d
+    args:
+      chdir: /srv
+    name: Spin up containers
+
+  - command: docker-compose exec web python manage.py migrate
+    args:
+      chdir: /srv
+    name: Running migrations
