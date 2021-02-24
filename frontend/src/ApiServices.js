@@ -1,12 +1,20 @@
 // import { DUMMY_JOBS } from "./DummyData";
 //
 // const jobs = DUMMY_JOBS
+import Cookies from "js-cookie";
 
 const jobs = [];
 
+/* TODO Replace this with a fetch from the server api-root. */
+const ApiRoot = {
+    proteinSearch: "/protein-search/",
+    submitProteinSearch: "/protein-search/start/"
+}
+
+
 
 async function fetchJobs() {
-    const response = await fetch( "/protein-search/" );
+    const response = await fetch( ApiRoot.proteinSearch );
     const pl = await response.json();
 
     while ( jobs.length > 0 ) {
@@ -22,27 +30,30 @@ async function fetchJobs() {
 
 
 async function submitJob( sequence ) {
-    const newJob = {
-        sequence,
-        url: "/" + jobs.length + 1,
-        "protein_id": "",
-        "record_found": "",
-        "record_source": "",
-        "record_description": "",
-        "location_start": -1,
-        "location_end": -1,
-        "job": {
-            "url": "http://localhost:6604/jobs/10/",
-            "created_on": "2021-02-21T23:53:37.079210Z",
-            "ended_on": null,
-            "state": "PEN",
-            "current": 0,
-            "total": 10,
-            "description": "protein search job for admin",
-            "message": ""
+    const csrftoken = Cookies.get("csrftoken");
+    const response = await fetch( ApiRoot.submitProteinSearch, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrftoken,
         },
+        body: JSON.stringify( { sequence } )
+    } );
+
+    if ( response.status === 200 || response.status === 202 ) {
+        const newJob = await response.json();
+
+        jobs.push(newJob);
+    } else if ( response.status === 400 ) {
+        const data = await response.json();
+
+        throw new Error( data.sequence[ 0 ] );
+    } else {
+        const data = await response.json();
+
+        throw new Error( data.message );
     }
-    jobs.push( newJob );
 
     return jobs;
 }
