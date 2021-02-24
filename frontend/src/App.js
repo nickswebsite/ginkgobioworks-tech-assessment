@@ -10,7 +10,8 @@ export default class App extends React.Component {
     constructor( props ) {
         super( props );
         this.state = {
-            jobs: []
+            jobs: [],
+            error: null
         }
     }
 
@@ -24,6 +25,7 @@ export default class App extends React.Component {
         return (
             <div className="App">
                 <SequenceSubmissionForm className={ "sequence-submission-form"}
+                                        error={ this.state.error }
                                         onSubmit={ ( sequence ) => this.onSubmit( sequence )}
                 />
                 <h1>Results</h1>
@@ -44,7 +46,12 @@ export default class App extends React.Component {
     }
 
     async onSubmit( sequence ) {
-        const jobs = await ApiServices.submitJob( sequence );
-        this.setState( { jobs } )
+        try {
+            const jobs = await ApiServices.submitJob(sequence);
+
+            this.setState({ jobs, error: "" } );
+        } catch ( error ) {
+            this.setState( { error: error.message } );
+        }
     }
 }

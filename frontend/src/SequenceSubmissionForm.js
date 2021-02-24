@@ -16,13 +16,15 @@ export class SequenceSubmissionForm extends React.Component {
 
     render() {
         return <form className="sequence-submission-form">
-            <label htmlFor="sequence">Enter Sequence</label>
-            <input id="sequence"
-                   type={ "text" }
-                   name={ "sequence" }
-                   value={ this.state.sequence }
-                   onChange={ ( event ) => this.onChange( event ) }
+            <label htmlFor="sequence">
+                Enter Sequence (A, C, T, or G)
+            </label>
+            <textarea id="sequence"
+                      name={ "sequence" }
+                      value={ this.state.sequence }
+                      onChange={ ( event ) => this.onChange( event ) }
             />
+            <p className="error">{ this.props.error }</p>
             <button onClick={ ( event ) => this.onClick( event ) }>
                 Submit
             </button>
