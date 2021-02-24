@@ -1,7 +1,50 @@
-version: '3'
+version: '3.3'
 services:
   redis:
     container_name: ginkgo-bioworks-redis
     image: redis:alpine
     ports:
     - 6379:6379
+
+  web:
+    container_name: web
+    depends_on:
+    - redis
+    image: docker.11x.engineering/ginkgo-bioworks-tech-assessment:latest
+    ports:
+    - 443:443
+    - 80:80
+    links:
+    - redis:redis
+    volumes:
+    - type: bind
+      source: ./infrastructure/key.local.pem
+      target: /srv/certificates/key.pem
+    - type: bind
+      source: ./infrastructure/chain.local.pem
+      target: /srv/certificates/crt.pem
+    - type: bind
+      source: ./local_settings.py
+      target: /app/local_settings.py
+    - type: bind
+      source: ./db.sqlite3
+      target: /app/db.sqlite3
+    - type: bind
+      source: ./media
+      target: /srv/media
+
+  celery:
+    container_name: celery
+    depends_on:
+    - redis
+    image: docker.11x.engineering/ginkgo-bioworks-tech-assessment:latest
+    command: celery -A conf worker -l INFO
+    links:
+    - redis:redis
+    volumes:
+    - type: bind
+      source: ./local_settings.py
+      target: /app/local_settings.py
+    - type: bind
+      source: ./db.sqlite3
+      target: /app/db.sqlite3

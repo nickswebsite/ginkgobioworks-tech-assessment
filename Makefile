@@ -1,6 +1,6 @@
 TARBALL := dist/ginkgo-bioworks-tech-assessment.docker.tar
 IMAGE_NAME := docker.11x.engineering/ginkgo-bioworks-tech-assessment:latest
-PYTHON := .v/bin/python
+FRONTEND_BUILD_COMMAND := npm install && yarn build
 
 # Paths to TLS certificates for your local dev machine.
 TLS_PRIVATE_KEY := $(shell pwd)/infrastructure/key.local.pem
@@ -24,6 +24,13 @@ DOCKER_SOURCES := deployment/* \
                   .dockerignore \
                   requirements.txt
 
+FRONTEND_SOURCES := frontend/src/*.js \
+                    frontend/src/*.css \
+                    frontend/public/*
+
+FRONTEND_INDEX_TARGET := frontend/static/index.html
+
+
 .PHONY: quick clean image
 
 
@@ -41,19 +48,16 @@ clean:
 image: ${TARBALL}
 
 
-${TARBALL}: ${SOURCES} ${DOCKER_SOURCES}
+${TARBALL}: ${SOURCES} ${DOCKER_SOURCES} ${FRONTEND_INDEX_TARGET}
 	mkdir -p dist
 	docker build -t ${IMAGE_NAME} .
 	docker save --output ${TARBALL} ${IMAGE_NAME}
 
 
-quick:
+${FRONTEND_INDEX_TARGET}: ${FRONTEND_SOURCES}
+	cd frontend && ${FRONTEND_BUILD_COMMAND}
+
+
+quick: ${FRONTEND_INDEX_TARGET}
 	docker build -t ${IMAGE_NAME} .
-	docker run --rm --name ginkgo-bioworks-tech-assessment \
-	                -p 80:80 \
-	                -p 443:443 \
-	                ${DEV_DATABASE_VOLUME_MAPPING} \
-	                ${DEV_TLS_VOLUME_MAPPINGS} \
-	                ${DEV_MEDIA_VOLUME_MAPPING} \
-	                -e DJANGO_SETTINGS_MODULE=conf.settings \
-	                    ${IMAGE_NAME}
+	docker-compose -f docker-compose.dev.yml up
